@@ -5,12 +5,16 @@
 static size_t
 wob_image_bar_horizontal_offset(size_t bar_width, size_t width, enum wob_alignment alignment)
 {
+	if (width > bar_width) {
+		width = bar_width;
+	}
+
 	if (alignment == WOB_ALIGNMENT_RIGHT) {
-		return width >= bar_width ? 0 : bar_width - width;
+		return bar_width - width;
 	}
 
 	if (alignment == WOB_ALIGNMENT_CENTER) {
-		return width >= bar_width ? 0 : (bar_width - width) / 2;
+		return (bar_width - width) / 2;
 	}
 
 	return 0;

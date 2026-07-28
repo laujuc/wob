@@ -1,3 +1,5 @@
+#include <setjmp.h>
+#include <stdarg.h>
 #include <stddef.h>
 #include <string.h>
 
@@ -13,7 +15,7 @@ test_centered_horizontal_bar_uses_actual_width(void **state)
 
 	const size_t width = 12;
 	const size_t height = 4;
-	uint32_t image_data[width * height];
+	uint32_t image_data[12 * 4];
 	memset(image_data, 0, sizeof(image_data));
 
 	struct wob_dimensions dimensions = {
