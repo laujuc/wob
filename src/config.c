@@ -184,8 +184,8 @@ handler(void *user, const char *section, const char *name, const char *value)
 			return 1;
 		}
 		if (strcmp(name, "timeout") == 0) {
-			if (parse_number(value, &ul) == false || ul < 1 || ul > 10000) {
-				wob_log_error("Timeout must be a value between 1 and %lu.", 10000);
+			if (parse_number(value, &ul) == false || ul > 10000) {
+				wob_log_error("Timeout must be a value between 0 and %lu.", 10000);
 				return 0;
 			}
 			config->timeout_msec = ul;

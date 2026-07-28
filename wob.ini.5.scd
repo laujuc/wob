@@ -9,7 +9,7 @@ You can run `wob -vv` to find the default values.
 # SECTION: default
 
 *timeout*
-	Timeout after which wob hides itself, in milliseconds.
+	Timeout after which wob hides itself, in milliseconds. Set to 0 to disable auto-hiding and keep the bar visible until input is closed or the process exits.
 
 *max*
 	This value will be represented as fully filled bar.

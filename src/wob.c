@@ -571,7 +571,7 @@ wob_run(struct wob_config *config)
 
 		int timeout = -1;
 		if (state->surface != NULL) {
-			timeout = state->config->timeout_msec;
+			timeout = state->config->timeout_msec == 0 ? -1 : (int) state->config->timeout_msec;
 		}
 
 		switch (poll(fds, 2, timeout)) {
