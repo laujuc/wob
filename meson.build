@@ -116,6 +116,12 @@ if cmocka.found()
      ['test/readline_test.c', 'src/readline.c'],
      dependencies: [cmocka]
    ))
+
+  test('config', executable(
+     'config_test',
+     ['test/config_test.c', 'src/config.c', 'src/color.c', 'src/log.c'],
+     dependencies: [cmocka]
+   ))
 endif
 
 scdoc = dependency('scdoc', version: '>=1.9.2', native: true, required: get_option('man-pages'))

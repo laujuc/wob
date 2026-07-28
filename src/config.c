@@ -7,6 +7,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
+#include <strings.h>
 #include <unistd.h>
 #include <wordexp.h>
 
@@ -167,6 +168,12 @@ parse_orientation(const char *str, enum wob_orientation *value)
 	return false;
 }
 
+static bool
+is_default_section(const char *section)
+{
+	return section == NULL || section[0] == '\0' || strcasecmp(section, "default") == 0;
+}
+
 int
 handler(void *user, const char *section, const char *name, const char *value)
 {
@@ -174,7 +181,7 @@ handler(void *user, const char *section, const char *name, const char *value)
 
 	unsigned long ul;
 
-	if (strcmp(section, "") == 0) {
+	if (is_default_section(section)) {
 		if (strcmp(name, "max") == 0) {
 			if (parse_number(value, &ul) == false || ul < 1 || ul > 10000) {
 				wob_log_error("Maximum must be a value between 1 and %lu.", 10000);
@@ -540,13 +547,23 @@ wob_config_load(struct wob_config *config, const char *config_path)
 	}
 
 	struct wob_dimensions dimensions = config->dimensions;
-	if (dimensions.width < MIN_PERCENTAGE_BAR_WIDTH + 2 * (dimensions.border_offset + dimensions.border_size + dimensions.bar_padding)) {
-		wob_log_error("Invalid geometry: width is too small for given parameters");
+	unsigned long minimum_width = MIN_PERCENTAGE_BAR_WIDTH + 2 * (dimensions.border_offset + dimensions.border_size + dimensions.bar_padding);
+	if (dimensions.width < minimum_width) {
+		wob_log_error(
+			"Invalid geometry: width is too small for given parameters (minimum %lu, got %lu). Consider increasing width or reducing border_offset, border_size, and bar_padding.",
+			minimum_width,
+			dimensions.width
+		);
 		return false;
 	}
 
-	if (dimensions.height < MIN_PERCENTAGE_BAR_HEIGHT + 2 * (dimensions.border_offset + dimensions.border_size + dimensions.bar_padding)) {
-		wob_log_error("Invalid geometry: height is too small for given parameters");
+	unsigned long minimum_height = MIN_PERCENTAGE_BAR_HEIGHT + 2 * (dimensions.border_offset + dimensions.border_size + dimensions.bar_padding);
+	if (dimensions.height < minimum_height) {
+		wob_log_error(
+			"Invalid geometry: height is too small for given parameters (minimum %lu, got %lu). Consider increasing height or reducing border_offset, border_size, and bar_padding.",
+			minimum_height,
+			dimensions.height
+		);
 		return false;
 	}
 
