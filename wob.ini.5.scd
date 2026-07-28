@@ -29,6 +29,9 @@ You can run `wob -vv` to find the default values.
 *bar_padding*
 	Bar padding, in pixels.
 
+*bar_alignment*
+	Horizontal bar alignment, one of *left*, *center*, and *right*. The default is *left*.
+
 *anchor*
 	Anchor point, combination of *top*, *left*, *right*, *bottom*, *center*.
 
@@ -90,6 +93,9 @@ Replace *\** with user friendly name of your choosing.
 
 *bar_padding*
 	Bar padding, in pixels.
+
+*bar_alignment*
+	Horizontal bar alignment, one of *left*, *center*, and *right*. The default is *left*.
 
 *anchor*
 	Anchor point, combination of *top*, *left*, *right*, *bottom*, *center*.

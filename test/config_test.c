@@ -26,7 +26,8 @@ test_default_section_is_supported(void **state)
 		"height = 1\n"
 		"border_offset = 0\n"
 		"border_size = 0\n"
-		"bar_padding = 0\n";
+		"bar_padding = 0\n"
+		"bar_alignment = right\n";
 	ssize_t written = write(fd, config_content, strlen(config_content));
 	assert_int_equal(written, (ssize_t) strlen(config_content));
 	close(fd);
@@ -39,6 +40,7 @@ test_default_section_is_supported(void **state)
 	assert_int_equal((int) config->max, 42);
 	assert_int_equal((int) config->dimensions.width, 9);
 	assert_int_equal((int) config->dimensions.height, 1);
+	assert_int_equal((int) config->dimensions.alignment, WOB_ALIGNMENT_RIGHT);
 
 	wob_config_destroy(config);
 	unlink(tmp_path);

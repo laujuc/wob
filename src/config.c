@@ -153,6 +153,27 @@ parse_color(const char *str, struct wob_color *color)
 }
 
 bool
+parse_alignment(const char *str, enum wob_alignment *value)
+{
+	if (strcmp(str, "left") == 0) {
+		*value = WOB_ALIGNMENT_LEFT;
+		return true;
+	}
+
+	if (strcmp(str, "center") == 0) {
+		*value = WOB_ALIGNMENT_CENTER;
+		return true;
+	}
+
+	if (strcmp(str, "right") == 0) {
+		*value = WOB_ALIGNMENT_RIGHT;
+		return true;
+	}
+
+	return false;
+}
+
+bool
 parse_orientation(const char *str, enum wob_orientation *value)
 {
 	if (strcmp(str, "horizontal") == 0) {
@@ -236,6 +257,13 @@ handler(void *user, const char *section, const char *name, const char *value)
 				return 0;
 			}
 			config->dimensions.bar_padding = ul;
+			return 1;
+		}
+		if (strcmp(name, "bar_alignment") == 0) {
+			if (parse_alignment(value, &config->dimensions.alignment) == false) {
+				wob_log_error("Invalid argument for bar_alignment. Valid options are left, center and right.");
+				return 0;
+			}
 			return 1;
 		}
 		if (strcmp(name, "margin") == 0) {
@@ -396,6 +424,13 @@ handler(void *user, const char *section, const char *name, const char *value)
 			output_config->dimensions.bar_padding = ul;
 			return 1;
 		}
+		if (strcmp(name, "bar_alignment") == 0) {
+			if (parse_alignment(value, &output_config->dimensions.alignment) == false) {
+				wob_log_error("Invalid argument for bar_alignment. Valid options are left, center and right.");
+				return 0;
+			}
+			return 1;
+		}
 
 		wob_log_warn("Unknown config key %s", name);
 		return 1;
@@ -516,6 +551,7 @@ wob_config_create()
 	config->dimensions.border_size = 4;
 	config->dimensions.bar_padding = 4;
 	config->dimensions.orientation = WOB_ORIENTATION_HORIZONTAL;
+	config->dimensions.alignment = WOB_ALIGNMENT_LEFT;
 	config->margin = (struct wob_margin) {.top = 0, .left = 0, .bottom = 0, .right = 0};
 	config->anchor = WOB_ANCHOR_CENTER;
 	config->overflow_mode = WOB_OVERFLOW_MODE_WRAP;
@@ -730,6 +766,7 @@ wob_dimensions_apply_scale(struct wob_dimensions dimensions, uint32_t scale)
 		.border_offset = scale_apply(dimensions.border_offset, scale),
 		.border_size = scale_apply(dimensions.border_size, scale),
 		.orientation = dimensions.orientation,
+		.alignment = dimensions.alignment,
 	};
 
 	return scaled_dimensions;
@@ -744,6 +781,7 @@ wob_dimensions_eq(struct wob_dimensions a, struct wob_dimensions b)
 	if (a.border_offset != b.border_offset) return false;
 	if (a.border_size != b.border_size) return false;
 	if (a.bar_padding != b.bar_padding) return false;
+	if (a.alignment != b.alignment) return false;
 
 	return true;
 }

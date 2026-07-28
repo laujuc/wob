@@ -30,6 +30,12 @@ enum wob_orientation {
 	WOB_ORIENTATION_VERTICAL,
 };
 
+enum wob_alignment {
+	WOB_ALIGNMENT_LEFT,
+	WOB_ALIGNMENT_CENTER,
+	WOB_ALIGNMENT_RIGHT,
+};
+
 struct wob_margin {
 	unsigned long top;
 	unsigned long right;
@@ -44,6 +50,7 @@ struct wob_dimensions {
 	unsigned long border_size;
 	unsigned long bar_padding;
 	enum wob_orientation orientation;
+	enum wob_alignment alignment;
 };
 
 struct wob_output_config {
