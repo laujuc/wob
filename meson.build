@@ -120,7 +120,7 @@ if cmocka.found()
   test('config', executable(
      'config_test',
      ['test/config_test.c', 'src/config.c', 'src/color.c', 'src/log.c'],
-     dependencies: [cmocka]
+     dependencies: [cmocka, wayland_client, inih, libm]
    ))
 endif
 

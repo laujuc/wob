@@ -50,15 +50,11 @@ wob_image_draw(uint32_t *image_data, struct wob_dimensions dimensions, struct wo
 		case WOB_ORIENTATION_HORIZONTAL: {
 				height = bar_height;
 				width = (size_t) (bar_width * percentage);
-				if (width > bar_width) {
-					width = bar_width;
-				}
 
 				size_t x_offset = 0;
 				if (dimensions.alignment == WOB_ALIGNMENT_CENTER) {
 					x_offset = (bar_width - width) / 2;
-				}
-				else if (dimensions.alignment == WOB_ALIGNMENT_RIGHT) {
+				} else if (dimensions.alignment == WOB_ALIGNMENT_RIGHT) {
 					x_offset = bar_width - width;
 				}
 
@@ -68,9 +64,6 @@ wob_image_draw(uint32_t *image_data, struct wob_dimensions dimensions, struct wo
 			}
 		case WOB_ORIENTATION_VERTICAL: {
 				height = (size_t) (bar_height * percentage);
-				if (height > bar_height) {
-					height = bar_height;
-				}
 				width = bar_width;
 				data = image_data + (offset * (dimensions.width + 1)) + (bar_height - height) * dimensions.width;
 				fill_rectangle(data, width, height, stride, bar_color);

@@ -3,11 +3,11 @@
 #define MIN_PERCENTAGE_BAR_WIDTH 1
 #define MIN_PERCENTAGE_BAR_HEIGHT 1
 
+#include <ctype.h>
 #include <ini.h>
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
-#include <strings.h>
 #include <unistd.h>
 #include <wordexp.h>
 
@@ -152,20 +152,38 @@ parse_color(const char *str, struct wob_color *color)
 	return wob_color_from_rgba_string(str, color);
 }
 
-bool
+static bool
+case_insensitive_equal(const char *a, const char *b)
+{
+	if (a == NULL || b == NULL) {
+		return a == b;
+	}
+
+	while (*a != '\0' && *b != '\0') {
+		if (tolower((unsigned char) *a) != tolower((unsigned char) *b)) {
+			return false;
+		}
+		a++;
+		b++;
+	}
+
+	return *a == *b;
+}
+
+static bool
 parse_alignment(const char *str, enum wob_alignment *value)
 {
-	if (strcmp(str, "left") == 0) {
+	if (case_insensitive_equal(str, "left")) {
 		*value = WOB_ALIGNMENT_LEFT;
 		return true;
 	}
 
-	if (strcmp(str, "center") == 0) {
+	if (case_insensitive_equal(str, "center")) {
 		*value = WOB_ALIGNMENT_CENTER;
 		return true;
 	}
 
-	if (strcmp(str, "right") == 0) {
+	if (case_insensitive_equal(str, "right")) {
 		*value = WOB_ALIGNMENT_RIGHT;
 		return true;
 	}
@@ -192,7 +210,14 @@ parse_orientation(const char *str, enum wob_orientation *value)
 static bool
 is_default_section(const char *section)
 {
-	return section == NULL || section[0] == '\0' || strcasecmp(section, "default") == 0;
+	if (section == NULL) {
+		return true;
+	}
+	if (section[0] == '\0') {
+		return true;
+	}
+
+	return case_insensitive_equal(section, "default");
 }
 
 int
@@ -261,7 +286,7 @@ handler(void *user, const char *section, const char *name, const char *value)
 		}
 		if (strcmp(name, "bar_alignment") == 0) {
 			if (parse_alignment(value, &config->dimensions.alignment) == false) {
-				wob_log_error("Invalid argument for bar_alignment. Valid options are left, center and right.");
+				wob_log_error("Invalid argument for bar_alignment. Valid options are left, center, or right.");
 				return 0;
 			}
 			return 1;
@@ -426,7 +451,7 @@ handler(void *user, const char *section, const char *name, const char *value)
 		}
 		if (strcmp(name, "bar_alignment") == 0) {
 			if (parse_alignment(value, &output_config->dimensions.alignment) == false) {
-				wob_log_error("Invalid argument for bar_alignment. Valid options are left, center and right.");
+				wob_log_error("Invalid argument for bar_alignment. Valid options are left, center, or right.");
 				return 0;
 			}
 			return 1;
