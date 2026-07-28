@@ -2,6 +2,20 @@
 
 #include "image.h"
 
+static size_t
+wob_image_bar_horizontal_offset(size_t bar_width, size_t width, enum wob_alignment alignment)
+{
+	if (alignment == WOB_ALIGNMENT_RIGHT) {
+		return width >= bar_width ? 0 : bar_width - width;
+	}
+
+	if (alignment == WOB_ALIGNMENT_CENTER) {
+		return width >= bar_width ? 0 : (bar_width - width) / 2;
+	}
+
+	return 0;
+}
+
 void
 fill_rectangle(uint32_t *pixels, size_t width, size_t height, size_t stride, uint32_t color)
 {
@@ -51,12 +65,7 @@ wob_image_draw(uint32_t *image_data, struct wob_dimensions dimensions, struct wo
 				height = bar_height;
 				width = (size_t) (bar_width * percentage);
 
-				size_t x_offset = 0;
-				if (dimensions.alignment == WOB_ALIGNMENT_CENTER) {
-					x_offset = (bar_width - width) / 2;
-				} else if (dimensions.alignment == WOB_ALIGNMENT_RIGHT) {
-					x_offset = bar_width - width;
-				}
+				size_t x_offset = wob_image_bar_horizontal_offset(bar_width, width, dimensions.alignment);
 
 				data = image_data + (offset * (dimensions.width + 1)) + x_offset;
 				fill_rectangle(data, width, height, stride, bar_color);

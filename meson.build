@@ -122,6 +122,12 @@ if cmocka.found()
      ['test/config_test.c', 'src/config.c', 'src/color.c', 'src/log.c'],
      dependencies: [cmocka, wayland_client, inih, libm]
    ))
+
+  test('image', executable(
+     'image_test',
+     ['test/image_test.c', 'src/image.c', 'src/color.c'],
+     dependencies: [cmocka, wayland_client, inih, libm]
+   ))
 endif
 
 scdoc = dependency('scdoc', version: '>=1.9.2', native: true, required: get_option('man-pages'))
